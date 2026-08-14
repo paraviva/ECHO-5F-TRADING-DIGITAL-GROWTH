@@ -146,52 +146,52 @@ export const Navbar: React.FC<NavbarProps> = ({
           <nav className="hidden xl:flex items-center space-x-1 bg-slate-950/70 p-1 rounded-2xl border border-slate-800 shrink-0">
             <button
               onClick={() => setActiveModule('customs')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+              className={`flex items-center space-x-1 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                 activeModule === 'customs'
                   ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
             >
               <Ship className="w-3.5 h-3.5" />
-              <span>海关提单智搜</span>
-              <span className="ml-1 text-[10px] px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-300">
+              <span>海关智搜</span>
+              <span className="ml-0.5 text-[10px] px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-300">
                 {totalCustomsCount}
               </span>
             </button>
 
             <button
               onClick={() => setActiveModule('crm')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+              className={`flex items-center space-x-1 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                 activeModule === 'crm'
                   ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
             >
               <Users2 className="w-3.5 h-3.5" />
-              <span>CRM 客户看板</span>
-              <span className="ml-1 text-[10px] px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-300">
+              <span>CRM 客户</span>
+              <span className="ml-0.5 text-[10px] px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-300">
                 {totalCrmCount}
               </span>
             </button>
 
             <button
               onClick={() => setActiveModule('erp')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+              className={`flex items-center space-x-1 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                 activeModule === 'erp'
                   ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
             >
               <FileSpreadsheet className="w-3.5 h-3.5" />
-              <span>ERP 单证</span>
-              <span className="ml-1 text-[10px] px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-300">
+              <span>ERP 订单</span>
+              <span className="ml-0.5 text-[10px] px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-300">
                 {totalPiCount}
               </span>
             </button>
 
             <button
               onClick={() => setActiveModule('ai_workbench')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+              className={`flex items-center space-x-1 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                 activeModule === 'ai_workbench'
                   ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-md font-black'
                   : 'text-cyan-300 hover:text-cyan-200 hover:bg-slate-800/60'
@@ -203,7 +203,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button
               onClick={() => setActiveModule('audit_matrix')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+              className={`flex items-center space-x-1 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                 activeModule === 'audit_matrix'
                   ? 'bg-emerald-600 text-white shadow-md'
                   : 'text-emerald-300 hover:text-emerald-200 hover:bg-slate-800/60'
@@ -211,52 +211,53 @@ export const Navbar: React.FC<NavbarProps> = ({
               title="全球全行业外贸验厂与检测标准自测"
             >
               <ShieldCheck className="w-3.5 h-3.5" />
-              <span>验厂与资质</span>
+              <span>验厂资质</span>
             </button>
 
             <button
               onClick={() => setActiveModule('mindset_probability')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+              className={`flex items-center space-x-1 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                 activeModule === 'mindset_probability'
                   ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-black shadow-md'
                   : 'text-amber-300 hover:text-amber-200 hover:bg-slate-800/60'
               }`}
-              title="从0到1理性激励心法与赢单概率算法公式"
+              title="外贸理性心法与赢单概率公式"
             >
               <BrainCircuit className="w-3.5 h-3.5" />
-              <span>理智心法&赢单</span>
+              <span>赢单心法</span>
             </button>
 
             <button
               onClick={() => setActiveModule('analytics')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+              className={`flex items-center space-x-1 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                 activeModule === 'analytics'
                   ? 'bg-blue-600 text-white shadow-md'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
             >
               <BarChart3 className="w-3.5 h-3.5" />
-              <span>大盘看板</span>
+              <span>大盘数据</span>
             </button>
           </nav>
 
           {/* Quick Action Buttons & User Profile */}
-          <div className="flex items-center space-x-2 shrink-0">
+          <div className="flex items-center space-x-1.5 shrink-0">
             <button
               onClick={onOpenImport}
-              className="px-2.5 py-1.5 sm:px-3 sm:py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white rounded-xl text-xs font-bold border border-slate-700 transition-colors flex items-center gap-1.5 shadow-sm cursor-pointer whitespace-nowrap"
-              title="支持批量导入真实 Excel/CSV 提单数据或自有客户线索"
+              className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white rounded-xl text-xs font-bold border border-slate-700 transition-colors flex items-center gap-1 shadow-sm cursor-pointer whitespace-nowrap"
+              title="批量导入提单或客户线索"
             >
-              <UploadCloud className="w-4 h-4 text-cyan-400 shrink-0" />
-              <span className="hidden md:inline">导入数据</span>
+              <UploadCloud className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+              <span>导入</span>
             </button>
 
             <button
               onClick={onOpenExport}
-              className="px-2.5 py-1.5 sm:px-3 sm:py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white rounded-xl text-xs font-bold border border-slate-700 transition-colors flex items-center gap-1.5 shadow-sm cursor-pointer whitespace-nowrap"
+              className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white rounded-xl text-xs font-bold border border-slate-700 transition-colors flex items-center gap-1 shadow-sm cursor-pointer whitespace-nowrap"
+              title="导出当前海关/CRM/ERP数据"
             >
-              <DownloadCloud className="w-4 h-4 text-emerald-400 shrink-0" />
-              <span className="hidden md:inline">导出 Excel</span>
+              <DownloadCloud className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+              <span>导出</span>
             </button>
 
             {/* User Account Login / Profile Indicator */}
@@ -357,62 +358,62 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Responsive Navigation Row for Tablet & Mobile (< xl) */}
-        <div className="xl:hidden flex items-center space-x-2 py-2 overflow-x-auto no-scrollbar border-t border-slate-800">
+        <div className="xl:hidden flex items-center space-x-1.5 py-2 overflow-x-auto no-scrollbar border-t border-slate-800">
           <button
             onClick={() => setActiveModule('customs')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap cursor-pointer shrink-0 ${
+            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap cursor-pointer shrink-0 ${
               activeModule === 'customs' ? 'bg-blue-600 text-white shadow-sm' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
             }`}
           >
-            海关提单 ({totalCustomsCount})
+            海关智搜 ({totalCustomsCount})
           </button>
           <button
             onClick={() => setActiveModule('crm')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap cursor-pointer shrink-0 ${
+            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap cursor-pointer shrink-0 ${
               activeModule === 'crm' ? 'bg-blue-600 text-white shadow-sm' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
             }`}
           >
-            外贸 CRM ({totalCrmCount})
+            CRM 客户 ({totalCrmCount})
           </button>
           <button
             onClick={() => setActiveModule('erp')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap cursor-pointer shrink-0 ${
+            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap cursor-pointer shrink-0 ${
               activeModule === 'erp' ? 'bg-blue-600 text-white shadow-sm' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
             }`}
           >
-            ERP 订单/PI ({totalPiCount})
+            ERP 订单 ({totalPiCount})
           </button>
           <button
             onClick={() => setActiveModule('ai_workbench')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap cursor-pointer shrink-0 ${
+            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap cursor-pointer shrink-0 ${
               activeModule === 'ai_workbench' ? 'bg-cyan-500 text-slate-950 font-black shadow-sm' : 'bg-slate-800 text-cyan-300 hover:bg-slate-700'
             }`}
           >
-            AI 增长工作台
+            AI 工作台
           </button>
           <button
             onClick={() => setActiveModule('audit_matrix')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap cursor-pointer shrink-0 ${
+            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap cursor-pointer shrink-0 ${
               activeModule === 'audit_matrix' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-slate-800 text-emerald-300 hover:bg-slate-700'
             }`}
           >
-            验厂与资质测评
+            验厂资质
           </button>
           <button
             onClick={() => setActiveModule('mindset_probability')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap cursor-pointer shrink-0 ${
+            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap cursor-pointer shrink-0 ${
               activeModule === 'mindset_probability' ? 'bg-amber-500 text-slate-950 font-black shadow-sm' : 'bg-slate-800 text-amber-300 hover:bg-slate-700'
             }`}
           >
-            理智心法&赢单公式
+            赢单心法
           </button>
           <button
             onClick={() => setActiveModule('analytics')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap cursor-pointer shrink-0 ${
+            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap cursor-pointer shrink-0 ${
               activeModule === 'analytics' ? 'bg-blue-600 text-white shadow-sm' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
             }`}
           >
-            大盘看板
+            大盘数据
           </button>
         </div>
       </div>
