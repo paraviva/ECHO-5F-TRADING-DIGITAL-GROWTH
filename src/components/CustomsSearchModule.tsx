@@ -52,15 +52,41 @@ export const CustomsSearchModule: React.FC<CustomsSearchModuleProps> = ({
 
   // Filter existing records
   const filteredRecords = records.filter(rec => {
-    // Search term
+    // Search term (Bilingual and fuzzy matching)
     if (searchTerm.trim() !== '') {
-      const term = searchTerm.toLowerCase();
+      const term = searchTerm.toLowerCase().trim();
       const matchBL = rec.blNumber.toLowerCase().includes(term);
       const matchBuyer = rec.consignee.toLowerCase().includes(term);
       const matchShipper = rec.shipper.toLowerCase().includes(term);
       const matchProduct = rec.productDescription.toLowerCase().includes(term);
       const matchHs = rec.hsCode.toLowerCase().includes(term);
-      if (!matchBL && !matchBuyer && !matchShipper && !matchProduct && !matchHs) {
+      const matchIndustry = rec.industry.toLowerCase().includes(term);
+      const matchCountry = rec.destinationCountry.toLowerCase().includes(term);
+      const matchPort = rec.destinationPort.toLowerCase().includes(term);
+
+      // Chinese/English Synonym mapping for common categories (e.g. socks / 袜)
+      let matchSynonym = false;
+      if (term.includes('sock') || term.includes('袜') || term.includes('hosiery')) {
+        matchSynonym = rec.productDescription.toLowerCase().includes('sock') || 
+                       rec.productDescription.toLowerCase().includes('hosiery') ||
+                       rec.hsCode.startsWith('6115') ||
+                       rec.hsCode.startsWith('6109') ||
+                       rec.shipper.includes('袜') ||
+                       rec.industry.includes('纺织');
+      } else if (term.includes('solar') || term.includes('光伏') || term.includes('太阳能')) {
+        matchSynonym = rec.productDescription.toLowerCase().includes('solar') || 
+                       rec.productDescription.toLowerCase().includes('pv') ||
+                       rec.hsCode.startsWith('8541') ||
+                       rec.industry.includes('光伏');
+      } else if (term.includes('bearing') || term.includes('轴承') || term.includes('机械')) {
+        matchSynonym = rec.productDescription.toLowerCase().includes('bearing') || 
+                       rec.productDescription.toLowerCase().includes('gearbox') ||
+                       rec.hsCode.startsWith('8482') ||
+                       rec.hsCode.startsWith('8483') ||
+                       rec.industry.includes('机械');
+      }
+
+      if (!matchBL && !matchBuyer && !matchShipper && !matchProduct && !matchHs && !matchIndustry && !matchCountry && !matchPort && !matchSynonym) {
         return false;
       }
     }
@@ -76,7 +102,7 @@ export const CustomsSearchModule: React.FC<CustomsSearchModuleProps> = ({
     }
 
     // HS Code
-    if (hsCodeInput.trim() !== '' && !rec.hsCode.includes(hsCodeInput.trim())) {
+    if (hsCodeInput.trim() !== '' && !rec.hsCode.replace(/\D/g, '').includes(hsCodeInput.trim().replace(/\D/g, ''))) {
       return false;
     }
 
@@ -96,6 +122,14 @@ export const CustomsSearchModule: React.FC<CustomsSearchModuleProps> = ({
       '',
       selectedIndustry === '全部品类' ? '' : selectedIndustry
     );
+  };
+
+  const handleClearFilters = () => {
+    setSearchTerm('');
+    setHsCodeInput('');
+    setSelectedCountry('全球');
+    setSelectedIndustry('全部品类');
+    setDestinationPortFilter('');
   };
 
   const countriesList = Array.from(new Set(records.map(r => r.destinationCountry)));
@@ -145,7 +179,10 @@ export const CustomsSearchModule: React.FC<CustomsSearchModuleProps> = ({
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="搜索品名、提单号、海外买家公司..."
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleRunLiveCustomsSearch();
+              }}
+              placeholder="搜索品名 (如 Socks/棉袜)、提单号、买家..."
               className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -157,7 +194,10 @@ export const CustomsSearchModule: React.FC<CustomsSearchModuleProps> = ({
               type="text"
               value={hsCodeInput}
               onChange={(e) => setHsCodeInput(e.target.value)}
-              placeholder="输入 HS 编码 (如 8482, 8504, 6109)..."
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleRunLiveCustomsSearch();
+              }}
+              placeholder="输入 HS 编码 (如 6115, 8482, 8504)..."
               className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
             />
           </div>
@@ -225,8 +265,78 @@ export const CustomsSearchModule: React.FC<CustomsSearchModuleProps> = ({
         </div>
       </div>
 
-      {/* Customs B/L Cards List */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      {/* Zero Results State or Cards List */}
+      {filteredRecords.length === 0 ? (
+        <div className="bg-white rounded-2xl border border-slate-200 p-8 sm:p-12 text-center space-y-5 shadow-xs">
+          <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mx-auto shadow-inner">
+            <Ship className="w-8 h-8" />
+          </div>
+          <div className="max-w-lg mx-auto space-y-2">
+            <h3 className="text-base font-extrabold text-slate-900">
+              {searchTerm || hsCodeInput ? `已在本地筛选「${searchTerm || hsCodeInput}」，尚未匹配到缓存记录` : '当前筛选条件下暂无提单记录'}
+            </h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              您当前连接的 <strong className="text-blue-600">UN Comtrade / 联合国全球海关数据源</strong> 拥有 200+ 国家和地区海关数据库。点击下方按钮，即可直接向海关 API 发起实时拉取！
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <button
+              onClick={handleRunLiveCustomsSearch}
+              disabled={isLoadingLiveAPI}
+              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-md flex items-center gap-2 transition-all cursor-pointer disabled:opacity-50"
+            >
+              {isLoadingLiveAPI ? (
+                <>
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  <span>正在联网海关 API 抓取「{searchTerm || '最新提单'}」...</span>
+                </>
+              ) : (
+                <>
+                  <Zap className="w-4 h-4 text-amber-300 fill-amber-300" />
+                  <span>立即联网海关 API 实时拉取【{searchTerm || '全量提单'}】</span>
+                </>
+              )}
+            </button>
+
+            <button
+              onClick={handleClearFilters}
+              className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-colors cursor-pointer"
+            >
+              重置所有筛选
+            </button>
+          </div>
+
+          {/* Quick Search Recommendations */}
+          <div className="pt-4 border-t border-slate-100 max-w-xl mx-auto">
+            <p className="text-[11px] text-slate-400 mb-2 font-medium">推荐高频检索热词（点击快速填充）：</p>
+            <div className="flex flex-wrap items-center justify-center gap-1.5">
+              {[
+                { label: 'Socks / 袜子 (HS 6115)', term: 'socks', hs: '6115.95' },
+                { label: 'Bearings / 轴承五金 (HS 8482)', term: 'bearing', hs: '8482.10' },
+                { label: 'Solar PV / 光伏储能 (HS 8541)', term: 'solar', hs: '8541.43' },
+                { label: 'Auto Parts / 汽配 (HS 8708)', term: 'auto parts', hs: '8708.29' },
+                { label: 'Electronics / 电子电源 (HS 8504)', term: 'power supply', hs: '8504.40' },
+                { label: 'Textiles / 针织面料 (HS 6109)', term: 'cotton fabric', hs: '6109.10' }
+              ].map(rec => (
+                <button
+                  key={rec.label}
+                  onClick={() => {
+                    setSearchTerm(rec.term);
+                    setHsCodeInput(rec.hs);
+                    setSelectedIndustry('全部品类');
+                    setSelectedCountry('全球');
+                  }}
+                  className="px-2.5 py-1 bg-slate-50 hover:bg-blue-50 text-slate-600 hover:text-blue-700 rounded-lg text-[11px] border border-slate-200 transition-colors cursor-pointer"
+                >
+                  {rec.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {filteredRecords.map((record) => (
           <div
             key={record.id}
@@ -341,6 +451,7 @@ export const CustomsSearchModule: React.FC<CustomsSearchModuleProps> = ({
           </div>
         ))}
       </div>
+      )}
     </div>
   );
 };
